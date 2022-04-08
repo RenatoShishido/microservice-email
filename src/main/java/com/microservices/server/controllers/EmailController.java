@@ -5,7 +5,6 @@ import com.microservices.server.models.EmailModel;
 import com.microservices.server.services.EmailService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -33,17 +32,14 @@ public class EmailController {
     }
 
     @GetMapping("/emails")
-    public ResponseEntity<Page<EmailModel>> getAllEmails(@PageableDefault(page = 0, size = 5, sort = "emailId", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<EmailModel>> getAllEmails(@PageableDefault(size = 5, sort = "emailId", direction = Sort.Direction.DESC) Pageable pageable) {
         return new ResponseEntity<>(emailService.findAll(pageable), HttpStatus.OK);
     }
 
     @GetMapping("/emails/{email}")
     public ResponseEntity<Object> getEmail(@PathVariable(value = "email") UUID emailId) {
         Optional<EmailModel> emailModelOptional = emailService.findById(emailId);
-        if(!emailModelOptional.isPresent())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found");
-        else
-            return ResponseEntity.status(HttpStatus.OK).body(emailModelOptional.get());
+        return emailModelOptional.<ResponseEntity<Object>>map(emailModel -> ResponseEntity.status(HttpStatus.OK).body(emailModel)).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not found"));
     }
 
 
