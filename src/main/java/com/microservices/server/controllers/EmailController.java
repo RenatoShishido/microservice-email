@@ -3,7 +3,6 @@ package com.microservices.server.controllers;
 import com.microservices.server.dtos.EmailDto;
 import com.microservices.server.models.EmailModel;
 import com.microservices.server.services.EmailService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,9 +24,7 @@ public class EmailController {
 
     @PostMapping("/sending-email")
     public ResponseEntity<EmailModel> sendingEmail(@RequestBody @Valid EmailDto emailDto) {
-        EmailModel emailModel = new EmailModel();
-        BeanUtils.copyProperties(emailDto, emailModel);
-        emailService.sendEmail(emailModel);
+        EmailModel emailModel = emailService.sendEmail(emailDto.getEmailModel());
         return new ResponseEntity<>(emailModel, HttpStatus.CREATED);
     }
 
