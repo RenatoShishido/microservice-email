@@ -2,21 +2,15 @@ package com.microservices.server.models;
 
 
 import com.microservices.server.enums.StatusEmail;
-import lombok.*;
-
+import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-
+@Data
 @Entity
 @Table(name = "TB_EMAIL")
-@Builder(toBuilder = true)
-@AllArgsConstructor()
-@NoArgsConstructor()
-@Setter()
-@Getter
 public class EmailModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -31,4 +25,6 @@ public class EmailModel implements Serializable {
     private String text;
     private LocalDateTime sendDateEmail;
     private StatusEmail statusEmail;
+
+
 }
