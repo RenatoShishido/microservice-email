@@ -1,11 +1,17 @@
 package com.microservices.server.dtos;
 
-import lombok.Data;
+import com.microservices.server.models.EmailModel;
+import lombok.*;
+import org.springframework.beans.BeanUtils;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-@Data
+@Builder(toBuilder = true)
+@AllArgsConstructor()
+@NoArgsConstructor()
+@Setter()
+@Getter
 public class EmailDto {
 
     @NotBlank
@@ -20,5 +26,11 @@ public class EmailDto {
     private String subject;
     @NotBlank
     private String text;
+
+    public EmailModel getEmailModel() {
+        EmailModel emailModel = new EmailModel();
+        BeanUtils.copyProperties(this, emailModel);
+        return emailModel;
+    }
 
 }

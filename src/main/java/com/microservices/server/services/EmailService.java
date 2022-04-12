@@ -25,22 +25,28 @@ public class EmailService {
     JavaMailSender emailSender;
 
     public EmailModel sendEmail(EmailModel emailModel) {
+        EmailModel model;
         emailModel.setSendDateEmail(LocalDateTime.now());
         try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(emailModel.getEmailFrom());
-            message.setTo(emailModel.getEmailTo());
-            message.setSubject(emailModel.getSubject());
-            message.setText(emailModel.getText());
-
+            SimpleMailMessage message = createSimpleMailMessage(emailModel);
             emailSender.send(message);
 
             emailModel.setStatusEmail(StatusEmail.SENT);
         }catch (MailException e) {
             emailModel.setStatusEmail(StatusEmail.ERROR);
         } finally {
-            return emailRepository.save(emailModel);
+            model = emailRepository.save(emailModel);
         }
+        return model;
+    }
+
+    public SimpleMailMessage createSimpleMailMessage(EmailModel emailModel) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom(emailModel.getEmailFrom());
+        simpleMailMessage.setTo(emailModel.getEmailTo());
+        simpleMailMessage.setSubject(emailModel.getSubject());
+        simpleMailMessage.setText(emailModel.getText());
+        return simpleMailMessage;
     }
 
     public Page<EmailModel> findAll(Pageable pageable) {
