@@ -23,16 +23,12 @@ public class BeanJavaMailSource {
     private String starttls;
     @Value("${spring.mail.properties.mail.smtp.auth}")
     private String auth;
-    @Value("${spring.mail.protocol}")
-    private String protocol;
-    
 
     @Bean()
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(host);
         mailSender.setPort(port);
-        mailSender.setProtocol(protocol);
         mailSender.setUsername(user);
         mailSender.setPassword(pass);
         mailSender.setJavaMailProperties(mailProps());
@@ -41,8 +37,8 @@ public class BeanJavaMailSource {
 
     private Properties mailProps() {
         Properties properties = new Properties();
-        properties.setProperty("spring.mail.smtp.starttls.enable", starttls);
-        properties.setProperty("spring.mail.properties.mail.smtp.auth", auth);
+        properties.setProperty("mail.smtp.starttls.enable", starttls);
+        properties.setProperty("mail.properties.mail.smtp.auth", auth);
         return properties;
     }
 }
